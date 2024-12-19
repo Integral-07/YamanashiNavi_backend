@@ -1,0 +1,25 @@
+{% load static %}
+
+<!DOCTYPE html>
+
+<head>
+    {{ title }}
+
+    <link rel="icon" href="{% static 'img/favicon.ico' %}">
+</head>
+
+<body>
+
+    {{ title }}
+    
+    <form method="POST" action="{% url 'eventDelete' id%}" class="festival-form">
+        {% csrf_token %}
+    
+        <button type="submit" class="btn-festival">上記の内容のイベント情報を削除</button>
+    </form>
+
+    {{ res }}
+
+</body>
+
+</html>

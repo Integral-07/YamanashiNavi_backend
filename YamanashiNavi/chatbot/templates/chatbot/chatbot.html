@@ -1,0 +1,19 @@
+{% load static %}
+
+<!DOCTYPE html>
+
+<body>
+    <h1>{{ title }}</h1>
+
+    <form method="POST">
+
+        {% csrf_token %}
+        {{ form.as_p }}
+        
+        <button type="submit">送信</button>
+    </form>
+
+    {{ response }}
+</body>
+
+</html>
