@@ -1,7 +1,7 @@
 import googlemaps, os
 
 # Google Maps APIキー
-API_KEY = os.getenv('GOOGLE_MAPS_API')
+API_KEY = os.getenv("GOOGLE_MAPS_API")
 
 # Google Mapsクライアントを作成
 gmaps = googlemaps.Client(key=API_KEY)
@@ -22,7 +22,7 @@ def get_place_photo(place_name):#, location, radius=1000):
     )
 
     if not places_result.get('results'):
-        return "施設が見つかりませんでした"
+        return None
 
     # 最初の施設を取得
     place = places_result['results'][0]
