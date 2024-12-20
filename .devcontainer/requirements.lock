@@ -4,3 +4,4 @@ line-bot-sdk==3.14.2
 openai==1.55.3
 django-environ==0.11.2
 django-cors-headers==4.6.0
+googlemaps==4.10.0

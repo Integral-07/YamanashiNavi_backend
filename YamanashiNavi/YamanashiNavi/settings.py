@@ -15,7 +15,7 @@ env.read_env(os.path.join(BASE_DIR,'api.env'))
 SECRET_KEY = 'django-insecure-+=rw9p%-28bm0l1lv1k-224zx_hkgk47@uqz$gba_w5%s0ij@#'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
     "*",
@@ -55,6 +55,9 @@ MIDDLEWARE = [
 CORS_ORIGIN_WHITELIST = (
     'http://localhost:3000',
 )
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 ROOT_URLCONF = 'YamanashiNavi.urls'
 

@@ -4,6 +4,7 @@ import urllib.request
 import json, os
 from .utils import message_creater
 
+from .utils import image_url
 from .models import Session
 
 REPLY_ENDPOINT_URL = "https://api.line.me/v2/bot/message/reply"
@@ -50,7 +51,7 @@ def message_handle(request):
             body = {
                 'replyToken': reply_token,
                 'messages': [
-                    message_creater.create_carousel_template(line_message.messages)
+                    message_creater.create_carousel_template(line_message.messages),
                 ]
             }
         else:
@@ -64,7 +65,7 @@ def message_handle(request):
                     "items": [
                         {
                             "type": "action",
-                            "imageUrl": "https://example.com/sushi.png",
+                            "imageUrl": image_url.shrine_icon_url,
                             "action": {
                                 "type": "message",
                                 "label": "sightseeing",
@@ -73,7 +74,7 @@ def message_handle(request):
                         },
                         {
                             "type": "action",
-                            "imageUrl": "https://example.com/sushi.png",
+                            "imageUrl": image_url.restaurant_icon_url,
                             "action": {
                                 "type": "message",
                                 "label": "lunch",
@@ -84,7 +85,7 @@ def message_handle(request):
                             "type": "action",
                             "action": {
                                 "type": "location",
-                                "label": "現在地を送る"
+                                "label": "location"
                             }
                         }
                     ]}

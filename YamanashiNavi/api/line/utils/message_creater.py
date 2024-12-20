@@ -1,28 +1,63 @@
 from openai import OpenAI
 from .get_dify import get_dify_response
-from .get_gpt import get_gpt_response
+from .get_photo import get_place_photo
 import json, re
 from urllib.parse import quote
 
 from ..models import Session
-
-#client = OpenAI(api_key=os.getenv("OPENAI_ASSISTANT_API_KEY"))
+from .image_url import *
 
 def create_carousel_template(_data_json):
     columns = []
     
+    #AIの回答からjson部分のみ抽出
     pattern = r"```json\s(.*?)\s```"
     match = re.search(pattern, _data_json, re.DOTALL)
-    #_data_json = _data_json.replace("'", '"')
 
     if match:
         data_json = match.group(1)
     else:
         data_json = _data_json
 
-    print(data_json)
-    data = json.loads(data_json)
-    print("[data]", data)
+    #print("[_data_json]", _data_json)
+    print("[data_json]", data_json)
+    try:
+        data = json.loads(data_json)
+    except Exception as e:
+        print(f"Json Error: {e}")
+        return {
+                "type": "text",
+                "text": "Try again ...",
+                "quickReply": {
+                "items": [
+                    {
+                        "type": "action",
+                        "imageUrl": shrine_icon_url,
+                        "action": {
+                            "type": "message",
+                            "label": "sightseeing",
+                            "text": "観光"
+                        }
+                    },
+                    {
+                        "type": "action",
+                        "imageUrl": restaurant_icon_url,
+                        "action": {
+                            "type": "message",
+                            "label": "lunch",
+                            "text": "食事"
+                        }
+                    },
+                    {
+                        "type": "action",
+                        "action": {
+                            "type": "location",
+                            "label": "location"
+                            }
+                    }
+                ]}
+        }
+    #print("[data]", data)
     idx = 0
 
     base_url = "https://maps.google.com/maps?q="
@@ -31,9 +66,13 @@ def create_carousel_template(_data_json):
             #image_url = get_dify_response(user="Re", query=f"{data[idx]["place"]}の画像のURLを返して")
             location = data[idx]["place"]
             encoded_url = base_url + quote(location)
+            image_url = get_place_photo(location)
+            if(image_url == None):
+                image_url = no_image_url
+
 
             columns.append({
-            "thumbnailImageUrl": "https://www.fuji-net.co.jp/wp/wp-content/uploads/2022/08/0.jpg",
+            "thumbnailImageUrl": image_url,
             "imageBackgroundColor": "#FFFFFF",
             "title": data[idx]["place"],
             "text": data[idx]["description"],
@@ -64,7 +103,35 @@ def create_carousel_template(_data_json):
             "columns": columns,
             "imageAspectRatio": "rectangle",
             "imageSize": "cover"
-        }
+        },
+        "quickReply": {
+            "items": [
+            {
+                "type": "action",
+                "imageUrl": shrine_icon_url,
+                "action": {
+                    "type": "message",
+                    "label": "sightseeing",
+                    "text": "観光"
+                }
+                },
+                {
+                    "type": "action",
+                    "imageUrl": restaurant_icon_url,
+                    "action": {
+                        "type": "message",
+                        "label": "lunch",
+                        "text": "食事"
+                    }
+                },
+                {
+                    "type": "action",
+                    "action": {
+                        "type": "location",
+                        "label": "location"
+                    }
+                }
+            ]}
     }
 
 def create_single_text_message(event, session):
@@ -87,27 +154,29 @@ def create_single_text_message(event, session):
                 # セッションが見つからない場合（フォローされていない場合）は何もしない
                 pass
 
-        elif(event['type'] == "image"):
-
-            response = "いい写真ですね！\n画像に対するAI応答は今後実装予定です"
-
 
         elif(event['type'] == "message"):
 
-            if(event['message']['text'] == "session reset"):
-                try:
-                    old_session = Session.objects.get(user_id=event['source']['userId'])
-                    new_session = Session(user_id=old_session.user_id, conversation_id="", lang_setting=old_session.lang_setting)
-                    new_session.save()
-                except:
-                    pass
+            if(event['message']['type'] == "image"):
+
+                response = "いい写真ですね！画像に対するAI応答は今後実装予定です"
 
             elif(event['message']['type'] == "text"):
 
-                query = event['message']['text']
-                user = event['source']['userId']
+                if(event['message']['text'] == "session reset"):
+                    try:
+                        old_session = Session.objects.get(user_id=event['source']['userId'])
+                        new_session = Session(user_id=old_session.user_id, conversation_id="", lang_setting=old_session.lang_setting)
+                        new_session.save()
+                        response = "new chat started..."
+                    except:
+                        response = "could not reset session"
 
-                response = get_dify_response(query, user, session)
+                else:
+                    query = event['message']['text']
+                    user = event['source']['userId']
+
+                    response = get_dify_response(query, user, session)
                 
             elif(event['message']['type'] == "location"):
 
@@ -120,7 +189,7 @@ def create_single_text_message(event, session):
                 user = event['source']['userId']
 
                 response = get_dify_response(query, user, session)
-                print(response)
+                #print(response)
 
     except Exception as e: 
         response = f"Error occurred: {str(e)}"
