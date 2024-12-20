@@ -1,5 +1,6 @@
 *.env
+*.log
+*.pyc
 __pycache__/
-line_config.py
-ngrok.exe
-*.sqlite3
+db-volumes/
+db.sqlite3
