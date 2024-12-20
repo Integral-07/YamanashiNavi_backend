@@ -19,7 +19,7 @@ DEBUG = False
 
 ALLOWED_HOSTS = [
     "*",
-    "aihackathon2024.onrender.com"
+    "yamanashinavi-backend.onrender.com"
 ]
 
 
