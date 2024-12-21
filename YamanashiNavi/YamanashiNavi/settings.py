@@ -66,7 +66,6 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 
 
-AUTH_USER_MODEL = 'with_chatGPT.CustomUser'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
