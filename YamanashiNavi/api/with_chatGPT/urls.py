@@ -15,7 +15,7 @@ urlpatterns = [
     path('', views.conversation),
     path('login/', views.login),
     path('signup/', views.Signup),
-    path('chat/<user_id>/', views.conversation)
+    path('chat/<user_id>', views.conversation)
     #path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     #path('token/refresh', TokenRefreshView.as_view(), name='token_refresh'),
 ]
