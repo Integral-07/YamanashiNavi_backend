@@ -129,6 +129,9 @@ def login(request):
         status=405
     )
 
+from ..line.utils.get_dify import get_dify_response
+from ..line.models import Session
+
 @api_view(['GET', 'POST'])
 def conversation(request, user_id):
     """
@@ -136,7 +139,7 @@ def conversation(request, user_id):
     """
     if request.method == 'GET':
         # メッセージをタイムスタンプ順に取得
-        messages = Message.objects.get(user_id=user_id).order_by('timestamp')
+        messages = Message.objects.filter(user_id=user_id).order_by('timestamp')
         serializer = MessageSerializer(messages, many=True)
         return Response(serializer.data)
 
@@ -147,15 +150,9 @@ def conversation(request, user_id):
             # 新しいメッセージを保存
             user_message = serializer.save()
 
-            # OpenAI API キーの設定
-            openai_api_key = os.getenv('OPENAI_API_KEY')
-            if not openai_api_key:
-                return Response({"error": "OpenAI API key is not set."}, status=500)
-
-            # OpenAI API 呼び出し
             try:
-                
-                ai_message_content = "返信"#get_dify_response(query, user, session)
+                new_session = Session(user_id=user_id, conversation_id="", lang_setting='ja')
+                ai_message_content = get_dify_response(user_message, user_id, session=new_session)
 
                 # AIからの応答を保存
                 ai_message = Message(content=ai_message_content, role='bot', user_id=user_id)
