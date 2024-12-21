@@ -5,6 +5,7 @@ from .models import Message
 from .serializers import MessageSerializer
 import os, json
 from django.contrib.auth import authenticate
+from django.contrib.auth.models import User
 """
 from django.conf import settings
 from rest_framework import generics, status, views, viewsets
@@ -37,6 +38,52 @@ class LoginView(APIView):
         
         return Response({'errMsg': 'ユーザ認証に失敗しました'}, status=status.HTTP_401_UNAUTHORIZED)
 """
+
+def Signup(request):
+    if request.method == "POST":
+        try:
+            # リクエストボディをJSONとして読み取る
+            data = json.loads(request.body)
+
+            # 必須フィールドの確認
+            username = data.get("username")
+            email = data.get("email")
+            password = data.get("password")
+            password_conf = data.get("password_conf")
+
+            if not username or not password:
+                return Response(
+                    {"error": "Username and password are required."},
+                    status=400
+                )
+            
+            if (password != password_conf):
+                return Response(
+                    {"error": "password does not match"},
+                    status=400
+                )
+            
+            else:
+                new_user = User(username=username, email=email, password=password)
+                new_user.save()
+                user = authenticate(username=username, password=password)
+                user_id = user.user_id
+                return Response(
+                    {"user_id": user_id},
+                    status=200
+                )   
+
+        except json.JSONDecodeError:
+            return Response(
+                {"error": "Invalid JSON format."},
+                status=400
+            )
+
+    # POST以外のリクエストへの対応
+    return Response(
+        {"error": "POST method required."},
+        status=405
+    )
 
 def login(request):
     if request.method == "POST":
