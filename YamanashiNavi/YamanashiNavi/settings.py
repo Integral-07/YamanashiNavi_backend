@@ -60,6 +60,10 @@ CORS_ORIGIN_WHITELIST = (
     'https://yamanashi-navi-frontend-5tlz.vercel.app',
 )
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://yamanashinavi-backend.onrender.com"
+]
+
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
