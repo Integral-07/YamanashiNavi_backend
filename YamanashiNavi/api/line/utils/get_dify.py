@@ -25,7 +25,7 @@ def get_dify_response(query: str, user: str, session) -> str:
     data = {
         "inputs": {},
         "query": query,
-        "response_mode": "blocking",
+        "response_mode": "streaming",
         "conversation_id": session.conversation_id,
         "user": user
     }
