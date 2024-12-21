@@ -1,11 +1,39 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework.views import APIView
 from .models import Message
 from .serializers import MessageSerializer
 import os
 
-def login(request):
-    pass
+from django.conf import settings
+from rest_framework import status
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
+class LoginView(APIView):
+    """ユーザのログイン処理
+    
+    Args:
+        APIView (class): rest_framework.viewsのAPIViewを受け取る
+    """
+
+    authentication_classes = [JWTAuthentication]
+    permission_classes = []
+
+    def post(self, request):
+        serializer = TokenObtainPairSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        access = serializer.validated_data.get("access", None)
+        refresh = serializer.validated_data.get("refresh", None)
+        if access:
+            response = Response(status=status.HTTP_200_ok)
+            max_age = settings.COOKIES_TIME
+            response.set_cookie('access', access, httponly=True, max_age=max_age)
+            response.set_cookie('refresh', refresh, httponly=True, max_age=max_age)
+
+            return response
+        
+        return Response({'errMsg': 'ユーザ認証に失敗しました'}, status=status.HTTP_401_UNAUTHORIZED)
 
 @api_view(['GET', 'POST'])
 def conversation(request):

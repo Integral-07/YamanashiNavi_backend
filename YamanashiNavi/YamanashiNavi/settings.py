@@ -1,6 +1,7 @@
 from pathlib import Path
 import environ, os
 import dj_database_url
+from timedelta import datetime
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -70,6 +71,14 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_PERMISSON_CLASSES': ['rest_framework.permissions.IsAuthenticated']
 }
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': datetime.timedelta(minutes=20),
+    'REFRESH_TOKEN_LIFETIME': datetime.timedelta(days=30),
+    'UPDATE_LAST_LOGIN': True,
+}
+
+COOKIE_TIME = 60 * 60 * 12
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
