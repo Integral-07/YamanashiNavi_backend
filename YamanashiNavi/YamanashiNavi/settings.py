@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'api.line',
     'api.with_chatGPT',
     'chatbot',
-    'corsheaders'
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -65,21 +65,8 @@ CSRF_TRUSTED_ORIGINS = [
     "https://yamanashinavi-backend.onrender.com"
 ]
 
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'api.with_chatGPT.authentication.CustomJWTAuthentication',
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ),
-    'DEFAULT_PERMISSON_CLASSES': ['rest_framework.permissions.IsAuthenticated']
-}
 
-SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': datetime.timedelta(minutes=20),
-    'REFRESH_TOKEN_LIFETIME': datetime.timedelta(days=30),
-    'UPDATE_LAST_LOGIN': True,
-}
-
-COOKIE_TIME = 60 * 60 * 12
+AUTH_USER_MODEL = 'with_chatGPT.CustomUser'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -154,8 +141,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
-STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+#STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
+#STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field

@@ -3,19 +3,21 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import Message
 from .serializers import MessageSerializer
-import os
-
+import os, json
+from django.contrib.auth import authenticate
+"""
 from django.conf import settings
-from rest_framework import status
+from rest_framework import generics, status, views, viewsets
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework.permissions import IsAuthenticated
 
 class LoginView(APIView):
-    """ユーザのログイン処理
+    '''ユーザのログイン処理
     
     Args:
         APIView (class): rest_framework.viewsのAPIViewを受け取る
-    """
+    ''''''
 
     authentication_classes = [JWTAuthentication]
     permission_classes = []
@@ -34,15 +36,60 @@ class LoginView(APIView):
             return response
         
         return Response({'errMsg': 'ユーザ認証に失敗しました'}, status=status.HTTP_401_UNAUTHORIZED)
+"""
+
+def login(request):
+    if request.method == "POST":
+        try:
+            # リクエストボディをJSONとして読み取る
+            data = json.loads(request.body)
+
+            # 必須フィールドの確認
+            username = data.get("username")
+            password = data.get("password")
+
+            if not username or not password:
+                return Response(
+                    {"error": "Username and password are required."},
+                    status=400
+                )
+
+            # 認証処理
+            user = authenticate(username=username, password=password)
+
+            if user is not None:
+                # 認証成功時のレスポンス
+                return Response(
+                    {"message": "Login successful.", "user_id": user.user_id},
+                    status=200
+                )
+            else:
+                # 認証失敗時のレスポンス
+                return Response(
+                    {"error": "Invalid username or password."},
+                    status=401
+                )
+
+        except json.JSONDecodeError:
+            return Response(
+                {"error": "Invalid JSON format."},
+                status=400
+            )
+
+    # POST以外のリクエストへの対応
+    return Response(
+        {"error": "POST method required."},
+        status=405
+    )
 
 @api_view(['GET', 'POST'])
-def conversation(request):
+def conversation(request, user_id):
     """
     会話履歴を取得（GET）または新しいメッセージを追加してAIの応答を生成（POST）
     """
     if request.method == 'GET':
         # メッセージをタイムスタンプ順に取得
-        messages = Message.objects.all().order_by('timestamp')
+        messages = Message.objects.get(user_id=user_id).order_by('timestamp')
         serializer = MessageSerializer(messages, many=True)
         return Response(serializer.data)
 
@@ -64,7 +111,7 @@ def conversation(request):
                 ai_message_content = "返信"#get_dify_response(query, user, session)
 
                 # AIからの応答を保存
-                ai_message = Message(content=ai_message_content, role='bot')
+                ai_message = Message(content=ai_message_content, role='bot', user_id=user_id)
                 ai_message.save()
 
                 # クライアントに応答を返す

@@ -1,3 +1,4 @@
+"""
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
 class CustomJWTAuthentication(JWTAuthentication):
@@ -10,3 +11,4 @@ class CustomJWTAuthentication(JWTAuthentication):
         request.META['HTTP_REFRESH_TOEKN'] = refresh
         
         return super().get_header(request)
+"""
