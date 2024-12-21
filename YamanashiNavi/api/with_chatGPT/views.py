@@ -5,6 +5,9 @@ from .serializers import MessageSerializer
 from openai import ChatCompletion
 import os
 
+def login(request):
+    pass
+
 @api_view(['GET', 'POST'])
 def conversation(request):
     """

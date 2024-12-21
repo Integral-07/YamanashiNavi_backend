@@ -32,9 +32,27 @@ def get_dify_response(query: str, user: str, session) -> str:
     
     response = requests.post(BASE_URL, headers=headers, data=json.dumps(data))
     response.raise_for_status()
-    
-    if(session.conversation_id == ""):
-        session = Session(user_id=session.user_id, conversation_id=response.json()['conversation_id'], lang_setting=session.lang_setting)
-        session.save()
 
-    return response.json()['answer']
+    result = ""
+    with requests.post(BASE_URL, json=data, headers=headers, stream=True) as response:
+            # ステータスコードが200であることを確認
+        response.raise_for_status()
+        for chunk in response.iter_lines():
+            if chunk:  # 空の行をスキップ
+                    # バイナリデータをデコードし、JSONとしてパース
+                chunk_data = chunk.decode('utf-8')
+                try:
+                    #print(chunk_data)
+                    json_data = chunk_data.split(":", 1)[1].strip()
+                    chunk_json = json.loads(json_data)
+                    if "answer" in chunk_json:
+                        result += str(chunk_json.get("answer"))
+
+                    if(session.conversation_id == ""):
+                        session = Session(user_id=session.user_id, conversation_id=chunk_json.get('conversation_id'), lang_setting=session.lang_setting)
+                        session.save()
+
+                except json.JSONDecodeError:
+                    result += "Error decoding JSON:" + str(chunk_data)
+    
+    return result
