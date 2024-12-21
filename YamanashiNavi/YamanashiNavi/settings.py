@@ -57,7 +57,7 @@ MIDDLEWARE = [
 ]
 
 CORS_ORIGIN_WHITELIST = (
-    'http://localhost:3000',
+    'https://yamanashi-navi-frontend-5tlz.vercel.app',
 )
 
 MEDIA_URL = '/media/'
