@@ -9,6 +9,7 @@ class Message(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
+"""
 class User(AbstractUser):
 
     user_identifier = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
@@ -17,3 +18,5 @@ class User(AbstractUser):
 
     def __str__(self):
         return f"{self.username} ({self.user_identifier})"
+
+"""
