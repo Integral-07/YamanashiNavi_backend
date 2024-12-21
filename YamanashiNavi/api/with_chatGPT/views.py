@@ -2,7 +2,6 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import Message
 from .serializers import MessageSerializer
-from openai import ChatCompletion
 import os
 
 def login(request):
@@ -33,7 +32,8 @@ def conversation(request):
 
             # OpenAI API 呼び出し
             try:
-                ai_message_content = "返答"
+                
+                ai_message_content = "返信"#get_dify_response(query, user, session)
 
                 # AIからの応答を保存
                 ai_message = Message(content=ai_message_content, role='bot')
