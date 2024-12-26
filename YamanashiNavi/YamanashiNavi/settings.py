@@ -40,8 +40,6 @@ INSTALLED_APPS = [
     'rest_framework',
     'app',
     'api.line',
-    'api.with_chatGPT',
-    'chatbot',
     'corsheaders',
 ]
 
