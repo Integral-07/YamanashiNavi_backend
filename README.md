@@ -1,5 +1,5 @@
-![](https://img.shields.io/badge/状態-リリース-blue)
 ![](https://img.shields.io/badge/YAMANASHI_AIハッカソン-2024_最優秀賞-yellow)
+![](https://img.shields.io/badge/状態-リリース-blue)
 ![](https://img.shields.io/badge/build-passing-green)
 
 
