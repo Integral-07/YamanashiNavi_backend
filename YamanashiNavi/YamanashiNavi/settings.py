@@ -23,7 +23,6 @@ SECRET_KEY = 'django-insecure-+=rw9p%-28bm0l1lv1k-224zx_hkgk47@uqz$gba_w5%s0ij@#
 DEBUG = False
 
 ALLOWED_HOSTS = [
-    "*",
     "yamanashinavi-backend.onrender.com"
 ]
 
