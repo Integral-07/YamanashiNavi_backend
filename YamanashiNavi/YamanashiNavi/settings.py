@@ -23,7 +23,7 @@ SECRET_KEY = 'django-insecure-+=rw9p%-28bm0l1lv1k-224zx_hkgk47@uqz$gba_w5%s0ij@#
 DEBUG = False
 
 ALLOWED_HOSTS = [
-    "yamanashinavi-backend.onrender.com"
+    "yamanashinavi-backend.onrender.com",
 ]
 
 
@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'app',
     'api.line',
+    'api.web',
     'corsheaders',
 ]
 
@@ -119,6 +120,26 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+
+REST_FRAMEWORK = {
+
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'api.web.authentication.CustomJWTAuthentication', # (xxx: authentication.pyを作成したディレクトリ)
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES' : ['rest_framework.permissions.IsAuthenticated']
+}
+
+# クッキーの有効期限の設定
+COOKIE_TIME = 60 * 60 * 12
+
+SIMPLE_JWT = {
+
+    'ACCESS_TOKEN_LIFETIME': datetime.timedelta(minutes=100), # 有効時間10分
+    'REFRESH_TOKEN_LIFETIME': datetime.timedelta(days=30), # 有効時間30日
+    'UPDATE_LAST_LOGIN': True, # ログイン時にauth_userテーブルにlast_loginフィールドを更新する
+}
 
 
 # Internationalization
