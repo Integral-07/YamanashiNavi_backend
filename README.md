@@ -54,7 +54,7 @@
 ## フロントエンド
 - Dify提供のWebサイト
 - Dify提供のエンジンをHTML埋め込み
-- オリジナルWebフロントエンド( https://github.com/Integral-07/YamanashiNavi_frontend )【未完成】
+- オリジナルWebフロントエンド( https://github.com/Integral-07/YamanashiNavi_frontend )
 - LINE接続（LINE MessagingAPI）
 - WhatsApp接続（未実装）
 
