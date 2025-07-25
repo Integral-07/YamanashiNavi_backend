@@ -11,7 +11,7 @@ def get_dify_response(query: str, history) -> str:
     Dify APIにリクエストを送信し、応答を取得する関数
 
     :param query: ユーザーの質問
-    :param user: ユーザー識別子
+    :param history: ユーザの会話履歴
     :return: APIからの応答テキスト
     """
     headers = {
@@ -19,12 +19,23 @@ def get_dify_response(query: str, history) -> str:
         'Content-Type': 'application/json'
     }
     
-    data = {
-        "inputs": {},
-        "query": query,
-        "response_mode": "streaming",
-        "conversation_id": history.conversation_id
-    }
+    if history.conversation_id == "":
+
+        data = {
+            "inputs": {},
+            "query": query,
+            "response_mode": "streaming",
+        }
+    
+    else:
+
+        data = {
+            "inputs": {},
+            "query": query,
+            "response_mode": "streaming",
+            "conversation_id": history.conversation_id
+        }
+
     
     response = requests.post(BASE_URL, headers=headers, data=json.dumps(data))
     response.raise_for_status()
