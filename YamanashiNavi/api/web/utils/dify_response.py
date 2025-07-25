@@ -31,7 +31,7 @@ def get_dify_response(query: str, history) -> str:
 
     result = ""
     with requests.post(BASE_URL, json=data, headers=headers, stream=True) as response:
-            # ステータスコードが200であることを確認
+        # ステータスコードが200であることを確認
         response.raise_for_status()
         for chunk in response.iter_lines():
             if chunk:  # 空の行をスキップ

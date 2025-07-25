@@ -20,10 +20,10 @@ SUPERUSER_PASSWORD = os.getenv('SUPERUSER_PASSWORD')
 SECRET_KEY = 'django-insecure-+=rw9p%-28bm0l1lv1k-224zx_hkgk47@uqz$gba_w5%s0ij@#'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = [
-    "yamanashinavi-backend.onrender.com",
+    "yamanashinavi-backend.onrender.com", "*"
 ]
 
 
