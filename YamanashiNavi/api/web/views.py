@@ -38,8 +38,9 @@ class HistoryView(APIView):
 
             # Response from AI
             try:
-                ai_response = get_dify_response(query=new_message, history=history)
+                ai_response = get_dify_response(query=new_message, user=user.username, history=history)
             except Exception as e:
+                print(f"dify_response_error {e}")
                 ai_response = f"AI生成エラーです。\nAPIの有効期限が切れている可能性があります\n{e}"
             new_ai_message = MessageModel(owner=history, role='ai', content=ai_response)
             new_ai_message.save()
